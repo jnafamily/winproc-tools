@@ -1,0 +1,93 @@
+plugins {
+    id 'java'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'maven-publish'
+    id 'signing'
+}
+
+group = 'com.jnafamily.winproctools'
+version = '0.1.0'
+description = 'A JNA Spring-Boot wrapper'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    withJavadocJar()
+    withSourcesJar()
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+ext {
+    jnaVersion = '5.14.0'
+    springBootVersion = '3.5.4'
+    lombokVersion = '1.18.32'
+    jupiterVersion = '5.8.1'
+    slf4jVersion='2.0.4'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+
+    // Spring
+    compileOnly "org.springframework.boot:spring-boot:${springBootVersion}"
+    compileOnly "org.springframework.boot:spring-boot-autoconfigure:${springBootVersion}"
+
+    // JNA
+    implementation "net.java.dev.jna:jna:${jnaVersion}"
+    implementation "net.java.dev.jna:jna-platform:${jnaVersion}"
+
+    // Lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    // Logger
+    implementation("org.slf4j:slf4j-api:${slf4jVersion}")
+
+    // Tests
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+    testImplementation "org.junit.jupiter:junit-jupiter:${jupiterVersion}"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+publishing {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+
+                groupId = project.group
+                version = project.version
+
+                pom {
+                    name = 'Process toolkit'
+                    description = 'A native-access Java wrapper library for process-level automation'
+                    url = 'https://github.com/jnafamily/winproc-tools'
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:git://github.com/jnafamily/winproc-tools.git'
+                        developerConnection = 'scm:git:ssh://github.com/jnafamily/winproc-tools.git'
+                        url = 'https://github.com/jnafamily/winproc-tools'
+                    }
+                }
+            }
+        }
+    }
+}
