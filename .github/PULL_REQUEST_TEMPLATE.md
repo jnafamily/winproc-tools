@@ -6,15 +6,21 @@
 > - _Why is it needed?_
 > - _Any relevant context or related issues?_
 
-## ✅ Type of change
+## 🌭 Type of change
 
-<!-- Select all that apply -->
+> _Select all that apply and remove those that do not apply_
+
+
 - [ ] 🐛 Bug fix
 - [ ] ✨ New feature
 - [ ] 🛠 Refactor (no functional change)
 - [ ] 📖 Documentation update
 - [ ] 🔒 Security fix
 - [ ] 🧪 Test-related change
+
+## 🧩 Dependencies
+
+> _List all dependencies (PRs, Issues, etc.) here_
 
 ## 🧪 Testing Instructions
 
@@ -32,6 +38,7 @@ PUT_YOUR_INSTRUCTIONS_HERE
 
 Please verify the following before submitting:
 
+- [ ] The branch is named clearly and follows a consistent naming convention (e.g. `feature/...`, `bugfix/...`, `refactor/...`)
 - [ ] The changes are testable and have been tested appropriately  
   _(Check this if there’s nothing testable, to acknowledge awareness)_
 - [ ] The PR includes a clear, informative description and testing instructions
