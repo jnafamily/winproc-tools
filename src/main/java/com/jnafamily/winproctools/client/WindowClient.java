@@ -1,7 +1,7 @@
-package com.jnafamily.winproctools.jna.api;
+package com.jnafamily.winproctools.client;
 
 import com.jnafamily.winproctools.exception.JnaOperationException;
-import com.jnafamily.winproctools.ext.User32Ext;
+import com.jnafamily.winproctools.jna.api.NativeWindowApi;
 import com.jnafamily.winproctools.model.Vector2;
 import com.sun.jna.Native;
 import com.sun.jna.platform.WindowUtils;
@@ -17,12 +17,12 @@ import java.util.function.Predicate;
 
 @Component
 @RequiredArgsConstructor
-public class WindowApi {
-    private final User32Ext user32Ext;
+public class WindowClient {
+    private final NativeWindowApi nativeWindowApi;
 
     public Vector2 getWindowPosition(WinDef.HWND hwnd) {
         WinDef.RECT rect = new WinDef.RECT();
-        if (user32Ext.GetWindowRect(hwnd, rect)) {
+        if (nativeWindowApi.GetWindowRect(hwnd, rect)) {
             return new Vector2(rect.left, rect.top);
         }
         throw new JnaOperationException("Could not get window position");
@@ -30,7 +30,7 @@ public class WindowApi {
 
     public Vector2 getWindowSize(WinDef.HWND hwnd) {
         WinDef.RECT rect = new WinDef.RECT();
-        if (user32Ext.GetWindowRect(hwnd, rect)) {
+        if (nativeWindowApi.GetWindowRect(hwnd, rect)) {
             int width = rect.right - rect.left;
             int height = rect.bottom - rect.top;
             return new Vector2(width, height);
@@ -40,26 +40,26 @@ public class WindowApi {
 
     public int getWindowProcessId(WinDef.HWND hwnd) {
         IntByReference pidRef = new IntByReference();
-        user32Ext.GetWindowThreadProcessId(hwnd, pidRef);
+        nativeWindowApi.GetWindowThreadProcessId(hwnd, pidRef);
         return pidRef.getValue();
     }
 
     public boolean isWindowEnabled(WinDef.HWND hwnd) {
-        return user32Ext.IsWindowEnabled(hwnd);
+        return nativeWindowApi.IsWindowEnabled(hwnd);
     }
 
     public boolean isWindowActive(WinDef.HWND hwnd) {
-        WinDef.HWND foreground = user32Ext.GetForegroundWindow();
+        WinDef.HWND foreground = nativeWindowApi.GetForegroundWindow();
         return hwnd.equals(foreground);
     }
 
     public int getWindowThreadId(WinDef.HWND hwnd) {
-        return user32Ext.GetWindowThreadProcessId(hwnd, new IntByReference());
+        return nativeWindowApi.GetWindowThreadProcessId(hwnd, new IntByReference());
     }
 
     public String getWindowClassName(WinDef.HWND hwnd) {
         char[] classNameBuffer = new char[512];
-        user32Ext.GetClassName(hwnd, classNameBuffer, classNameBuffer.length);
+        nativeWindowApi.GetClassName(hwnd, classNameBuffer, classNameBuffer.length);
         return Native.toString(classNameBuffer);
     }
 
@@ -68,13 +68,13 @@ public class WindowApi {
     }
 
     public boolean isWindowVisible(WinDef.HWND hwnd) {
-        return user32Ext.IsWindowVisible(hwnd);
+        return nativeWindowApi.IsWindowVisible(hwnd);
     }
 
     public <T> List<T> findWindows(Predicate<WinDef.HWND> filter, Function<WinDef.HWND, T> mapper) {
         List<T> result = new LinkedList<>();
 
-        user32Ext.EnumWindows((hWnd, data) -> {
+        nativeWindowApi.EnumWindows((hWnd, data) -> {
             if (filter.test(hWnd)) {
                 result.add(mapper.apply(hWnd));
             }

@@ -1,9 +1,15 @@
 package com.jnafamily.winproctools.model.window;
 
 import com.jnafamily.winproctools.model.Vector2;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 
-public record WindowInfo(Descriptor descriptor, State state) {
+@Data
+@AllArgsConstructor
+public class WindowInfo {
+    private Descriptor descriptor;
+    private State state;
 
     /**
      * Represents the immutable/static part of window data.
